@@ -1,6 +1,9 @@
 PrimeBits: O(log n)
 
+Definition : If a binary representation of a number has prime number os 1's then it is a PrimeBits number. Find total number primeBits between 2 numbers.
+
 Total count of the PrimeBits between x, y is caclulated using combinations. 
+
 The comeplexity of the system is O(log n), where n is the value of the bigger number.
 
 For this problem, n can be unsigned 64 bit number.
