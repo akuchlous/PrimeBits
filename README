@@ -1,0 +1,113 @@
+PrimeBits: O(log n)
+
+Total count of the PrimeBits between x, y is caclulated using combinations. 
+The comeplexity of the system is O(log n), where n is the value of the bigger number.
+
+For this problem, n can be unsigned 64 bit number.
+
+
+Solution:
+=========
+   Explained with help of example:
+   count = prime_bits(19,7)
+
+     max number = 19 , binary representation = 1 0 0 1 1
+     min number = 7  , binary representation = 0 0 1 1 1
+
+   number of bits that are used by max = 5 
+
+   Step 1:
+   =======
+   Using all 5 bit, find count of numbers where P(x) is true.
+       P(x): 
+          true if the number of 1 bits set in the
+             binary representation of x is prime,
+
+   This can can be cacluate using simple Combinations:
+
+             5     5     5
+    count1 =  C  +  C  +  C     = 10 + 10 + 1 = 21
+               2     3     5
+
+    where 5 = number of bits available.
+          2, 3, 5 : number<=5 , and prime P(number) = true
+
+    Step 2: 
+    =======
+    Find count of numbers where P(x) is true, and x<7 (0 0 1 1 1)
+
+    Find the lowest bit which is 1, and make it 0 : 0 0 1 1 0
+    This is lower than 7.
+
+    choice to fill = 0
+               0
+    count2a  =  C   = 1
+                 0
+ 
+    corresponding to : 0 0 1 1 0
+
+    Find next upper 1 bit = 2 bit from LSB, and make it zero, and lower bits dont care
+
+    0 0 1 0 _
+
+    All combinations are lower than 7.
+              1
+    count2b =  C   = 1
+                1  
+    corresponding to : 0 0 1 0 1
+
+    Find next upper 1 bit = 3 bit from LSB, and make it zero, and lower bits dont care
+
+    0 0 0 _ _
+
+    All combinations are lower than 7.
+              2
+    count2c =  C   = 1
+                2  
+
+    corresponding to : 0 0 0 1 1
+
+    count 2 = count2a + count2b + count2c = 1 + 1 + 1 = 3
+    
+    Step 3: 
+    =======
+    Find count of numbers where P(x) is true, and x>19 (1 0 0 1 1)
+    
+    iterate from LSB to MSB and find the first 0 = 3 bit from LSB
+    make is 1 , and lower bits dont care
+
+    1 0 1 _ _
+
+    All combinations are > 19. 
+    count of 1 = 2 in already decide bits (bit 5, bit 4 , bit 3)
+    remainging two bits can have (0, 1) 1's, so that P(x) is true
+                2      2
+    count3a  =   C  +   C     = 1 + 2 = 3
+                  0      1 
+
+    corresponding to : 10100, 10101, 10110
+
+    Make next 0 bit 1 = 4 bit from bottom, and make lower bits dont care
+
+    1 1 _ _ _ 
+    count of 1 = 2 in already decide bits (bit 5, bit 4 , bit 3)
+    remainging bits can have n = (0, 1, 3) bits as one
+               3      3    3
+    count3b =   C   +  C  + C    = 1 + 3 + 1 = 5
+                 0      1    3
+    All combinations are > 19
+  
+      count3 = count3a + count3b = 8
+    
+    Step 4:
+    ======
+
+    Final Count = count1 - count2 - count3 = 21 - 3 - 8 = 10
+
+    Answer = 10
+
+
+Challenges:
+
+1) To come up with a solution better than O(n-m). Present solution is log(n)
+2) limitation of uint64_t imposed it own challenges. Combinations used above, cannot be calculated using the traditional way of calculating factorials, due to overflow conditions.  Implement a Pascal's tree for calcuating combinations.
